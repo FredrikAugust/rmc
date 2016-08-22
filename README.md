@@ -1,5 +1,7 @@
 # `rmc` - Ruby Music Client
 
+![Screenshot](http://i.imgur.com/UrTHhZS.jpg)
+
 ## Crash course
 `j` navigate up
 
