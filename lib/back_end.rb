@@ -18,6 +18,18 @@ class BackEnd
     @mpd.playlists
   end
 
+  # add all songs from the playlist to queue and then shuffle and play first
+  def play(playlist)
+   @mpd.clear
+
+    playlist.songs.each do |song|
+      @mpd.add song
+    end
+
+   @mpd.shuffle
+   @mpd.play
+  end
+
   def disconnect
     @mpd.disconnect
   end
