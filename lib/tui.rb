@@ -8,8 +8,12 @@ require './back_end.rb'
 Ncurses.initscr
 
 # global declarations
-@maxy, @maxx = [Ncurses.getmaxy(Ncurses.stdscr) - 1,
-                Ncurses.getmaxx(Ncurses.stdscr) - 1]
+def max_vals
+  @maxy, @maxx = [Ncurses.getmaxy(Ncurses.stdscr) - 1,
+                  Ncurses.getmaxx(Ncurses.stdscr) - 1]
+end
+
+max_vals
 
 @pos = 0
 @playing = -1
@@ -56,34 +60,39 @@ begin
 
   # 113 == 'q' in the ascii table
   while((ch = Ncurses.getch()) != 113) do
-    case(ch.chr)
-    when 'j' # down
+    case(ch)
+    when 'j'.ord # down
       if @pos < (playlists.size - 1)
         @pos += 1
         show_playlists(playlists)
       end
-    when 'k' # up
+    when 'k'.ord # up
       if @pos > 0
         @pos -= 1
         show_playlists(playlists)
       end
-    when 'p' # play
+    when 10, 13 # play, \n or \r
       @back_end.play playlists[@pos]
       @playing = @pos
       show_playlists(playlists)
-    when 's' # pause/unpause
+    when 'p'.ord, 32 # pause/unpause, space
       @back_end.pause
-    when '-' # vol down 5%
+    when '-'.ord # vol down 5%
       @back_end.volume(-5)
       write_currently_playing
-    when '+' # vol up 5%
+    when '+'.ord # vol up 5%
       @back_end.volume(5)
       write_currently_playing
-    when '>' # next
+    when '>'.ord # next
       @back_end.next
       write_currently_playing
-    when '<' # prev
+    when '<'.ord # prev
       @back_end.prev
+      write_currently_playing
+    when Ncurses::KEY_RESIZE
+      Ncurses.clear
+      max_vals     
+      show_playlists(playlists)
       write_currently_playing
     end
 
