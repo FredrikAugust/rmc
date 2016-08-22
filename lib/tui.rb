@@ -12,25 +12,22 @@ Ncurses.initscr
                 Ncurses.getmaxx(Ncurses.stdscr) - 1]
 
 @pos = 0
+@playing = -1
 
 # method to write currently playing song
 def write_currently_playing
-  Ncurses.mvaddstr(@maxy, 0, @back_end.get_current_song + " "*100) # hack to overwrite old stuff
+  Ncurses.mvaddstr(@maxy, 0, @back_end.get_current_song + " [#{@back_end.volume}%]" + " "*100) # hack to overwrite old stuff
   Ncurses.refresh
-  sleep(1)
 end
 
 # list availible playlists
 def show_playlists(pl_list)
   pl_list.each_with_index do |e, i|
-    Ncurses.mvaddstr(i, 0, (@pos == i ? "> " : "") + e.name + " "*100) # see above
+    Ncurses.mvaddstr(i, 0, (@pos == i ? "> " : "") + \
+                     (i == @playing ? "{ #{e.name} }" : e.name) \
+                     + " "*100) # see above
     Ncurses.refresh()
   end
-end
-
-# play the playlist
-def play(playlist)
-  @back_end.play(playlist)
 end
 
 
@@ -53,31 +50,46 @@ begin
   @cp_t = Thread.new do
     loop do
       write_currently_playing
+      sleep(0.5)
     end
   end
 
   # 113 == 'q' in the ascii table
   while((ch = Ncurses.getch()) != 113) do
     case(ch.chr)
-    when 'k'
+    when 'j' # down
       if @pos < (playlists.size - 1)
         @pos += 1
         show_playlists(playlists)
       end
-    when 'j'
+    when 'k' # up
       if @pos > 0
         @pos -= 1
         show_playlists(playlists)
       end
-    when 'p'
-      play playlists[@pos]
+    when 'p' # play
+      @back_end.play playlists[@pos]
+      @playing = @pos
+      show_playlists(playlists)
+    when 's' # pause/unpause
+      @back_end.pause
+    when '-' # vol down 5%
+      @back_end.volume(-5)
+      write_currently_playing
+    when '+' # vol up 5%
+      @back_end.volume(5)
+      write_currently_playing
+    when '>' # next
+      @back_end.next
+      write_currently_playing
+    when '<' # prev
+      @back_end.prev
+      write_currently_playing
     end
 
     Ncurses.refresh()
   end
 ensure
-  # kill thread updating currently playing
-
   # disconnect from mopidy
   @back_end.disconnect
   Ncurses.curs_set(1)

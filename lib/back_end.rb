@@ -5,6 +5,9 @@ class BackEnd
     @mpd = MPD.new 'localhost', 6600
 
     @mpd.connect
+
+    # settings
+    @mpd.random = true
   end
 
   def get_current_song
@@ -18,7 +21,7 @@ class BackEnd
     @mpd.playlists
   end
 
-  # add all songs from the playlist to queue and then shuffle and play first
+  # add all songs from the playlist to queue and play first
   def play(playlist)
    @mpd.clear
 
@@ -26,8 +29,23 @@ class BackEnd
       @mpd.add song
     end
 
-   @mpd.shuffle
    @mpd.play
+  end
+
+  def volume(set=0)
+    set == 0 ? @mpd.volume : (@mpd.volume = @mpd.volume + set)
+  end
+
+  def prev
+    @mpd.previous
+  end
+
+  def next
+    @mpd.next
+  end
+
+  def pause
+    @mpd.pause = !@mpd.paused?
   end
 
   def disconnect
