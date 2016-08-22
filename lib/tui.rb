@@ -7,18 +7,25 @@ require './back_end.rb'
 # create a screen object
 Ncurses.initscr
 
+# global declarations
+@maxy, @maxx = [Ncurses.getmaxy(Ncurses.stdscr) - 1,
+                Ncurses.getmaxx(Ncurses.stdscr) - 1]
+
+@pos = 0
+
 # method to write currently playing song
 def write_currently_playing
-  Ncurses.mvaddstr(Ncurses.getmaxy(Ncurses.stdscr) - 1,
-                   0, @back_end.get_current_song)
+  Ncurses.mvaddstr(@maxy, 0, @back_end.get_current_song)
   Ncurses.refresh
   sleep(1)
 end
 
 # list availible playlists
-def show_playlists(playlist_list)
-  playlist_list.size.times do |t|
-    Ncurses.mvaddstr(t-1, 0, playlist_list[t].name)
+def show_playlists(pl_list)
+  pl_list.each_with_index do |e, i|
+    Ncurses.mvaddstr(i, 0, (@pos == i ? "> " : "  ") + e.name)
+    
+    Ncurses.refresh()
   end
 end
 
@@ -33,16 +40,27 @@ begin
  
   write_currently_playing
 
+  #load playlists
+  playlists = @back_end.get_playlists
+
   # show playlists
-  show_playlists(@back_end.get_playlists)
+  show_playlists(playlists)
 
   @cp_t = Thread.new{ write_currently_playing }  
 
   # 113 == 'q' in the ascii table
   while((ch = Ncurses.getch()) != 113) do
     case(ch.chr)
-    when 'p'
-
+    when 'k'
+      if @pos < (playlists.size - 1)
+        @pos += 1
+        show_playlists(playlists)
+      end
+    when 'j'
+      if @pos > 0
+        @pos -= 1
+        show_playlists(playlists)
+      end
     end
 
     Ncurses.refresh()
