@@ -13,6 +13,11 @@ class BackEnd
     "Playing: #{song.artist} > #{song.title}"
   end
 
+  # return an array of playlists
+  def get_playlists
+    @mpd.playlists
+  end
+
   def disconnect
     @mpd.disconnect
   end
