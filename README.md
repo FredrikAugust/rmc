@@ -20,7 +20,7 @@
 `<` previous song
 
 ## How to run
-`cd repo/lib/`
+`cd rmc/lib/`
 
 `ruby tui.rb`
 
