@@ -39,6 +39,8 @@ begin
   Ncurses.cbreak()
   # don't output what you type on the screen
   Ncurses.noecho()
+  # enable arrow keys
+  Ncurses.stdscr.keypad(true)
 
   # don't show cursor
   Ncurses.curs_set(0)
@@ -61,12 +63,12 @@ begin
   # 113 == 'q' in the ascii table
   while((ch = Ncurses.getch()) != 113) do
     case(ch)
-    when 'j'.ord # down
+    when 'j'.ord, Ncurses::KEY_DOWN # down
       if @pos < (playlists.size - 1)
         @pos += 1
         show_playlists(playlists)
       end
-    when 'k'.ord # up
+    when 'k'.ord, Ncurses::KEY_UP # up
       if @pos > 0
         @pos -= 1
         show_playlists(playlists)
