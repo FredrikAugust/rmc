@@ -3,9 +3,9 @@
 [![asciicast](https://asciinema.org/a/4r9onc2inom7lnb8aratn69tr.png)](https://asciinema.org/a/4r9onc2inom7lnb8aratn69tr)
 
 ## Crash course
-`j` navigate up
+`j` or `up` navigate up
 
-`k` navigate down
+`k` or `down` navigate down
 
 `<space>` or `p` pause/unpause
 
