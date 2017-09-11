@@ -2,7 +2,8 @@
 
 [![asciicast](https://asciinema.org/a/4r9onc2inom7lnb8aratn69tr.png)](https://asciinema.org/a/4r9onc2inom7lnb8aratn69tr)
 
-## Crash course
+## Usage
+
 `j` or `up` navigate up
 
 `k` or `down` navigate down
@@ -19,19 +20,15 @@
 
 `<` previous song
 
-## How to run
+## Running
+
 `cd rmc/lib/`
 
 `ruby tui.rb`
 
-## Deps.
-`mopidy` this has to run on `localhost` port `6600` unless you wanna change that manually. You can do that in the `back_end.rb` file
+## Dependencies
 
-`ruby >=2.0`
-
-`ncurses-ruby`
-
-`ruby-mpd`
-
-## Problems?
-Submit an issue and I might take a look at it.
+* `mopidy` this has to run on `localhost` port `6600` unless you wanna change that manually. You can do that in the `back_end.rb` file
+* `ruby >=2.0`
+* `ncurses-ruby`
+* `ruby-mpd`
